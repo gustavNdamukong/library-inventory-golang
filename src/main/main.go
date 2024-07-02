@@ -60,9 +60,6 @@ func getBookById(id string) (*book, error) {
 }
 
 func checkoutBook(c *gin.Context) {
-	//fmt.Printf("WE ARE IN")
-	//os.Exit(1)
-
 	//check if we have an 'id' as a query string parameter & return an error if not
 	id, ok := c.GetQuery("id")
 
