@@ -1,12 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-
 	"errors"
+
+	"github.com/gin-gonic/gin"
 )
+
+const port = 8080
 
 type book struct {
 	//the first letters of these keys MUST be uppercase. This makes the fields publicly accessible
@@ -29,12 +32,24 @@ var books = []book{
 	{ID: "3", Title: "War and Peace", Author: "Leo Tolstoy", Quantity: 6, Stock: 6},
 }
 
+func init() {
+	/*err := godotenv.Load("../../.env")
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}*/
+	initializers.LoadEnvVariables()
+}
+
 // a gin context contains all the info about a request. It allows u return a response
 func getBooks(c *gin.Context) {
 	//specify that you wish to get back a nicely formatted json obj (with proper indentation)
 	//we send back a status of 200 (http.StatusOK) & the books data (wh will be auto serialised 4 us into json)
 	//We could have returned files, HTML pages etc
-	c.IndentedJSON(http.StatusOK, books)
+	c.JSON(200, gin.H{
+		"message": "Yeeeeaaahhh - books right?",
+	})
+	///// c.IndentedJSON(http.StatusOK, books)
 }
 
 func bookById(c *gin.Context) {
@@ -131,6 +146,7 @@ func createBook(c *gin.Context) {
 }
 
 func main() {
+
 	//create a router for your app
 	router := gin.Default()
 	router.GET("/books", getBooks)
@@ -140,7 +156,7 @@ func main() {
 	router.PATCH("/return", returnBook)
 
 	//run your new Gin web server on any port of your choice
-	router.Run("localhost:8080")
+	router.Run(fmt.Sprintf("localhost:%d", port))
 	//After this line, we've just implemented an API (albeit it has only one func for now-getBookd())
 	//the end point of the API is 'http://localhost:8080/books'
 	//to run your app & expose the server, you should do 'go run main.go' from within your src/main dir.
