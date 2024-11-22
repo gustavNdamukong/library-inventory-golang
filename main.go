@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"errors"
 
 	"github.com/gustavNdamukong/library-inventory-golang/initializers"
-	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,29 +35,61 @@ var books = []book{
 
 var PORT string
 
-var DB *gorm.DB
+/*
+	NOTES:
+	To run migrations in Go with GORM, follow these steps:
+	-create a model package on your root in a 'models' dir
+	-create models inside this dir eg a book model file will be named 'booksModel.go'.
+		Here are its contents:
+
+			package models
+
+			import "gorm.io/gorm"
+
+			type Books struct {
+				gorm.Model
+				ID       string
+				Title    string
+				Author   string
+				Quantity int
+				Stock    int
+			}
+	-Then create a migration package on ur root in a 'migrations' dir
+	-Create 'migrate.go' file in there, and place this code in it:
+
+			package main
+
+			import (
+				"github.com/gustavNdamukong/library-inventory-golang/initializers"
+				"github.com/gustavNdamukong/library-inventory-golang/models"
+				"gorm.io/gorm"
+			)
+
+			var DB *gorm.DB
+
+			func init() {
+				initializers.LoadEnvVariables()
+				DB = initializers.ConnectToDB()
+			}
+
+			func main() {
+				DB.AutoMigrate(&models.Books{})
+			}
+
+	-That's it. To run your migration, juast run this command:
+
+			go run migrations/migrate.go
+
+	-The table books will be created as defined in the Books struct in booksModel.go
+		and any data in it will be inserted as well.
+*/
 
 func init() {
-
-	/*
-		err := godotenv.Load(".env")
-
-		if err != nil {
-			log.Fatal("Error loading .env file")
-		}
-
-		DB = database.ConnectToDB()
-		/////if database.DB == nil {
-		if DB == nil {
-			log.Fatal("Database connection not initialized")
-		}
-
-		port = os.Getenv("PORT")
-	*/
-
-	//port = App_port
 	initializers.LoadEnvVariables()
-	initializers.ConnectToDB()
+	/////initializers.ConnectToDB()
+
+	PORT = os.Getenv("PORT")
+	//log.Println("Successfully got port in main.go, and it is: ", PORT)
 }
 
 // a gin context contains all the info about a request. It allows u return a response

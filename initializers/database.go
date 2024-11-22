@@ -1,7 +1,6 @@
 package initializers
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -9,12 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
-//var DBConnection *gorm.DB
+var DB *gorm.DB
 
-func DBConnection() *gorm.DB {
+func ConnectToDB() *gorm.DB {
 	var err error
 	dsn := os.Getenv("DB_CREDENTIALS")
-	fmt.Println("Using DSN:", dsn) // Add this line
+	log.Println("GOT DSN: ", dsn)
 	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
@@ -23,6 +22,5 @@ func DBConnection() *gorm.DB {
 		log.Println("Connected to database")
 	}
 
-	log.Fatal("STOPPING HERE")
 	return DB
 }

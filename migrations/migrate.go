@@ -1,4 +1,4 @@
-package migrations
+package main
 
 import (
 	"github.com/gustavNdamukong/library-inventory-golang/initializers"
@@ -9,7 +9,8 @@ import (
 var DB *gorm.DB
 
 func init() {
-	initializers.ConnectToDB()
+	initializers.LoadEnvVariables()
+	DB = initializers.ConnectToDB()
 }
 
 func main() {

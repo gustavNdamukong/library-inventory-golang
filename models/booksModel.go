@@ -2,7 +2,7 @@ package models
 
 import "gorm.io/gorm"
 
-type Bindas struct {
+type Books struct {
 	gorm.Model
 	ID       string
 	Title    string
